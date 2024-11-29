@@ -66,9 +66,9 @@ fn main() -> Result<()> {
     let ignore_paths: Vec<String> = paths.iter()
         .flat_map(|path| {
             ignore_paths.iter().map(move |ignore| {
-                canonicalize(Path::new(path).join(ignore)).unwrap().to_string_lossy().into_owned()
+                canonicalize(Path::new(path).join(ignore)).unwrap_or(PathBuf::new()).to_string_lossy().into_owned()
             })
-        })
+        }).filter(|path| !path.is_empty())
         .collect();
 
     let output_file = matches
