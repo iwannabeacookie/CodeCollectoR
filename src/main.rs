@@ -99,22 +99,22 @@ fn collect_code(
                 writeln!(writer, "{}", path.display())?;
             }
         }
-        writeln!(writer, "\nCode Files:\n================")?;
+        writeln!(writer, "\nCode Files:")?;
     }
 
     // Write Code Files
     for path in paths {
-        let path = Path::new(path);
+        let path = Path::new(path).canonicalize().unwrap();
         if path.is_file() {
-            if should_include(path, formats, ignore_paths) {
+            if should_include(path.as_path(), formats, ignore_paths) {
                 let mut writer = writer.lock().unwrap();
-                process_file(path, &mut *writer)?;
+                process_file(path.as_path(), &mut *writer)?;
             }
         } else if path.is_dir() {
-            if should_ignore(path, ignore_paths) {
+            if should_ignore(path.as_path(), ignore_paths) {
                 continue;
             }
-            process_directory(path, formats, ignore_paths, Arc::clone(&writer))?;
+            process_directory(path.as_path(), formats, ignore_paths, Arc::clone(&writer))?;
         }
     }
 
@@ -190,7 +190,7 @@ fn should_include(path: &Path, formats: &[&str], ignore_paths: &Vec<String>) -> 
 }
 
 fn process_file(path: &Path, writer: &mut impl Write) -> Result<()> {
-    writeln!(writer, "\n================\nFilepath: {}", path.display())?;
+    writeln!(writer, "\n================\nFilepath: {}\n################", path.display())?;
     let content = fs::read_to_string(path)
         .with_context(|| format!("Reading file {}", path.display()))?;
     writeln!(writer, "{}", content)?;
@@ -218,7 +218,7 @@ fn process_directory(
                     if path.is_file() && should_include(path, formats, ignore_paths) {
                         let mut writer = writer.lock().unwrap();
                         if let Err(e) = process_file(path, &mut *writer) {
-                            eprintln!("Error processing file {}: {:?}", path.display(), e);
+                            eprintln!("Error processing file {}: {:?}\n", path.display(), e);
                         }
                     }
                 }
