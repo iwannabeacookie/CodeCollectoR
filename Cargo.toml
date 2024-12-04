@@ -1,5 +1,5 @@
 [package]
-name = "CodeCollectoR"
+name = "code_collector"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,3 +9,6 @@ walkdir = "2.3.3"
 ignore = "0.4.18"
 anyhow = "1.0.71"
 dirs = "5.0.1"
+hex = "0.4.3"
+toml = "0.8.19"
+serde = { version = "1.0.215", features = ["derive"] }
