@@ -12,11 +12,11 @@ pub struct Cli {
     pub paths: Vec<PathBuf>,
 
     /// File formats to include. If not specified, all files are included.
-    #[arg(short, long, value_name = "FORMAT", action = ArgAction::Append)]
+    #[arg(short, long, value_name = "FORMATS", action = ArgAction::Append)]
     pub formats: Vec<String>,
 
     /// Paths (files or directories) to ignore.
-    #[arg(short, long, value_name = "IGNORE_PATH", action = ArgAction::Append)]
+    #[arg(short, long, value_name = "IGNORE_PATHS", action = ArgAction::Append)]
     pub ignore_paths: Vec<PathBuf>,
 
     /// Output file name.
