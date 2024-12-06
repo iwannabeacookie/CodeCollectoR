@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 use std::fs;
 
 pub fn should_ignore(path: &Path, ignore_paths: &[PathBuf]) -> bool {
-    ignore_paths.iter().any(|ignore| path.starts_with(ignore))
+    ignore_paths.iter().any(|ignore| path.ends_with(ignore.as_path()))
         || path
             .file_name()
             .map_or(false, |name| name.to_string_lossy().starts_with('.'))

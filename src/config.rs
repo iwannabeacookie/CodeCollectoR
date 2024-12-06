@@ -3,6 +3,7 @@ use crate::cli::Cli;
 use std::fs;
 use std::path::PathBuf;
 use serde::Deserialize;
+use std::io::Write;
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
@@ -31,6 +32,9 @@ impl Config {
         if let Some(preset_config) = Self::load_preset_config("default_preset")? {
             config.merge(preset_config);
         }
+
+        config.paths = crate::utils::canonicalize_paths(&config.paths)
+            .with_context(|| "Canonicalizing paths")?;
 
         Ok(config)
     }

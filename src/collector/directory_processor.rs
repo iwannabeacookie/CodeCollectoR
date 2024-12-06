@@ -1,4 +1,4 @@
-use crate::collector::path_handler::should_include;
+use crate::collector::path_handler::{should_ignore, should_include};
 use crate::config::Config;
 use crate::output::Writer;
 use anyhow::Result;
@@ -19,7 +19,9 @@ pub fn process_directory(dir: &Path, config: &Config, writer: &mut Writer) -> Re
             match result {
                 Ok(entry) => {
                     let path = entry.path();
-                    if path.is_file() && should_include(path, &config.formats, &config.ignore_paths) {
+                    if path.is_dir() && should_ignore(path, &config.ignore_paths) {
+                        return ignore::WalkState::Skip;
+                    } else if path.is_file() && should_include(path, &config.formats, &config.ignore_paths) {
                         if let Err(e) = process_file(path, &mut writer) {
                             eprintln!("Error processing file {}: {:?}", path.display(), e);
                         }

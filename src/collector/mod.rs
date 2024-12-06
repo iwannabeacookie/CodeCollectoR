@@ -6,7 +6,7 @@ use std::io::Write;
 
 use crate::config::Config;
 use crate::output::Writer;
-use anyhow::{Context, Result};
+use anyhow::Result;
 
 pub struct Collector {
     config: Config,
@@ -42,18 +42,15 @@ impl Collector {
     fn write_project_structure(&self, writer: &mut Writer) -> Result<()> {
         writeln!(writer, "Project Structure:")?;
         for path in &self.config.paths {
-            let canonical_path = path.canonicalize()
-                .with_context(|| format!("Canonicalizing path {:?}", path))?;
-            if canonical_path.is_dir() {
+            if path.is_dir() && !path_handler::should_ignore(&path, &self.config.ignore_paths) {
+                writeln!(writer, "{}/", path.file_name().unwrap().to_string_lossy())?;
                 path_handler::generate_tree(
-                    &canonical_path,
+                    &path,
                     "",
                     &self.config.ignore_paths,
                     &self.config.formats,
                     writer,
                 )?;
-            } else if canonical_path.is_file() {
-                writeln!(writer, "{}", canonical_path.display())?;
             }
         }
         writeln!(writer, "\nCode Files:")?;
