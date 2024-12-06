@@ -15,6 +15,7 @@
 
 ## Roadmap
 
+- [ ] Coming up with a cool name
 - [x] Initial prototype
 - [ ] Windows support
 - [ ] Advanced format collecting (e.g., pdf, pptx, etc.)
