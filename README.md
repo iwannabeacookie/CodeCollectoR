@@ -30,7 +30,7 @@ The collected data is then written to a single .txt file, making it easy to supp
 
 ### Prerequisites
 
-- [Rust](https://www.rust-lang.org/tools/install) (version 1.56.0 or later)
+- [Rust](https://www.rust-lang.org/tools/install)
 
 ### Steps
 
