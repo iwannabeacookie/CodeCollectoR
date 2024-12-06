@@ -24,7 +24,6 @@ The collected data is then written to a single .txt file, making it easy to supp
 - **Format Filtering:** Collect files based on specified formats/extensions.
 - **Ignore Paths:** Exclude certain directories or files from the collection process.
 - **Output Options:** Write the collected data to a specified output file.
-- **Robust Error Handling:** Utilizes `anyhow` for comprehensive error management.
 
 ## Installation
 
