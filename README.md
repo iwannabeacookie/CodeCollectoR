@@ -26,6 +26,7 @@
 - [ ] !!! Continuous code collection (watch mode) !!!
 - [ ] Interactive CLI mode
 - [ ] Packaging for Linux distributions
+
 And more...
 
 ## Overview
