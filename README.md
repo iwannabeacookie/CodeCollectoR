@@ -4,6 +4,7 @@
 
 ## Table of Contents
 
+- [Roadmap](#roadmap)
 - [Overview](#overview)
 - [Features](#features)
 - [Installation](#installation)
@@ -11,6 +12,21 @@
 - [Sample Output](#sample-output)
 - [Dependencies](#dependencies)
 - [Contributing](#contributing)
+
+## Roadmap
+
+- [x] Initial prototype
+- [ ] Windows support
+- [ ] Advanced format collecting (e.g., pdf, pptx, etc.)
+- [ ] Additional output formats (e.g., JSON, XML)
+- [ ] System-wide configuration
+- [ ] Directory specific configuration
+- [ ] Ignore file
+- [ ] Output size optimization (e.g., collapsing functions, code blocks, etc.)
+- [ ] !!! Continuous code collection (watch mode) !!!
+- [ ] Interactive CLI mode
+- [ ] Packaging for Linux distributions
+And more...
 
 ## Overview
 
