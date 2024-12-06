@@ -59,7 +59,7 @@ pub fn generate_tree(
             } else {
                 format!("{}│   ", prefix)
             };
-            generate_tree(dir, &new_prefix, ignore_paths, formats, writer)?;
+            generate_tree(&path, &new_prefix, ignore_paths, formats, writer)?;
         } else {
             if formats.is_empty() || formats.iter().any(|ext| {
                 path.extension()

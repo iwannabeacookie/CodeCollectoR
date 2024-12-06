@@ -57,6 +57,7 @@ impl Collector {
             }
         }
         writeln!(writer, "\nCode Files:")?;
+        writer.flush()?;
         Ok(())
     }
 }
