@@ -4,8 +4,9 @@ use std::path::PathBuf;
 #[derive(Parser, Debug)]
 #[command(name = "CodeCollector")]
 #[command(version = "1.0")]
-#[command(author = "Your Name <you@example.com>")]
+#[command(author = "iwannabeacookie")]
 #[command(about = "Collects code from specified directories and files into a single text file.")]
+#[command(override_usage = "code_collector <PATHS> [OPTIONS]...")]
 pub struct Cli {
     /// Paths (files or directories) to collect code from.
     #[arg(required = true, value_name = "PATHS")]
