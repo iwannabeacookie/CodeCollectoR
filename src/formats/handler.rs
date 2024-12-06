@@ -11,17 +11,16 @@ pub struct FormatHandler;
 impl FormatHandler {
     pub fn from_path(path: &Path) -> Result<Box<dyn FormatHandlerTrait>> {
         match path.extension().and_then(|e| e.to_str()) {
-            Some("txt") | Some("rs") | Some("md") => Ok(Box::new(TextFormat)),
             Some("bin") => Ok(Box::new(BinaryFormat)),
-            Some(other) => Err(anyhow::anyhow!("Unsupported format: {}", other)),
+            Some(_other) => Ok(Box::new(BaseFormat)),
             None => Err(anyhow::anyhow!("File has no extension: {:?}", path)),
         }
     }
 }
 
-struct TextFormat;
+struct BaseFormat;
 
-impl FormatHandlerTrait for TextFormat {
+impl FormatHandlerTrait for BaseFormat {
     fn read_content(&self, path: &Path) -> Result<String> {
         fs::read_to_string(path)
             .with_context(|| format!("Reading UTF-8 file {}", path.display()))
