@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
 #[command(name = "CodeCollector")]
-#[command(version = "1.0")]
+#[command(version = "0.1.1")]
 #[command(author = "iwannabeacookie")]
 #[command(about = "Collects code from specified directories and files into a single text file.")]
 #[command(override_usage = "code_collector <PATHS> [OPTIONS]...")]
