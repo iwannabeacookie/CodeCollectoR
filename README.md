@@ -17,7 +17,7 @@
 
 - [ ] Coming up with a cool name
 - [x] Initial prototype
-- [ ] Windows support
+- [x] Windows support
 - [ ] Advanced format collecting (e.g., pdf, pptx, etc.)
 - [ ] Additional output formats (e.g., JSON, XML)
 - [ ] System-wide configuration
