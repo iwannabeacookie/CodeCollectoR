@@ -1,4 +1,3 @@
-use crate::config::Config;
 use std::io::Write;
 use crate::output::Writer;
 use anyhow::Result;
@@ -15,6 +14,8 @@ pub fn should_ignore(path: &Path, ignore_paths: &[PathBuf]) -> bool {
 pub fn should_include(path: &Path, formats: &[String], ignore_paths: &[PathBuf]) -> bool {
     if should_ignore(path, ignore_paths) {
         return false;
+    } else if path.is_dir() {
+        return true;
     }
     if formats.is_empty() {
         return true;
@@ -37,7 +38,7 @@ pub fn generate_tree(
     let count = entries.len();
     let last_unignored = entries.iter().rev().position(|entry| {
         let path = entry.path();
-        !should_ignore(&path, ignore_paths)
+        should_include(&path, formats, ignore_paths)
     }).map(|pos| count - pos).unwrap_or(count);
 
     for (i, entry) in entries.into_iter().enumerate() {
@@ -54,17 +55,14 @@ pub fn generate_tree(
                 connector,
                 path.file_name().unwrap().to_string_lossy()
             )?;
-            let new_prefix = if i == count - 1 {
+            let new_prefix = if i == last_unignored - 1 {
                 format!("{}    ", prefix)
             } else {
                 format!("{}│   ", prefix)
             };
             generate_tree(&path, &new_prefix, ignore_paths, formats, writer)?;
         } else {
-            if formats.is_empty() || formats.iter().any(|ext| {
-                path.extension()
-                    .map_or(false, |e| e == ext.trim_start_matches('.'))
-            }) {
+            if should_include(&path, formats, ignore_paths) {
                 writeln!(
                     writer,
                     "{}{}{}",
