@@ -13,4 +13,6 @@ pub fn canonicalize_paths(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
     paths.iter().map(|path| path.canonicalize().map_err(|e| anyhow::Error::new(e))).collect()
 }
 
-// Add more utility functions as needed
+pub fn canonicalize_formats(extensions: &[String]) -> Vec<String> {
+    extensions.iter().map(|ext| ext.trim_start_matches('.').to_owned()).collect()
+}

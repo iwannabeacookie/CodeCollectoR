@@ -36,6 +36,8 @@ impl Config {
         config.paths = crate::utils::canonicalize_paths(&config.paths)
             .with_context(|| "Canonicalizing paths")?;
 
+        config.formats = crate::utils::canonicalize_formats(&config.formats);
+
         Ok(config)
     }
 
