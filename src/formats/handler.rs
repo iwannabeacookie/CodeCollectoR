@@ -11,6 +11,7 @@ pub struct FormatHandler;
 impl FormatHandler {
     pub fn from_path(path: &Path) -> Result<Box<dyn FormatHandlerTrait>> {
         match path.extension().and_then(|e| e.to_str()) {
+            Some("pdf") => Ok(Box::new(PdfFormat)),
             Some("bin") => Ok(Box::new(BinaryFormat)),
             Some(_other) => Ok(Box::new(BaseFormat)),
             None => Err(anyhow::anyhow!("File has no extension: {:?}", path)),
@@ -35,5 +36,14 @@ impl FormatHandlerTrait for BinaryFormat {
             .with_context(|| format!("Reading binary file {}", path.display()))?;
         // Example: Convert binary data to hex representation
         Ok(hex::encode(bytes))
+    }
+}
+
+struct PdfFormat;
+
+impl FormatHandlerTrait for PdfFormat {
+    fn read_content(&self, path: &Path) -> Result<String> {
+        pdf_extract::extract_text(path)
+            .with_context(|| format!("Reading PDF file {}", path.display()))
     }
 }

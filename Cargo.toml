@@ -12,3 +12,4 @@ dirs = "5.0.1"
 hex = "0.4.3"
 toml = "0.8.19"
 serde = { version = "1.0.215", features = ["derive"] }
+pdf-extract = "0.7.10"
