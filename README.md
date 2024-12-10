@@ -9,8 +9,6 @@
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Sample Output](#sample-output)
-- [Dependencies](#dependencies)
 - [Contributing](#contributing)
 
 ## Roadmap
@@ -19,6 +17,7 @@
 - [x] Initial prototype
 - [x] Windows support
 - [ ] Advanced format collecting (e.g., pdf, pptx, etc.)
+    - [x] PDF
 - [ ] Additional output formats (e.g., JSON, XML)
 - [ ] System-wide configuration
 - [ ] Directory specific configuration
