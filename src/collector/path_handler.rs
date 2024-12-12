@@ -1,5 +1,6 @@
 use std::io::Write;
 use crate::output::Writer;
+use crate::utils::get_ignore;
 use anyhow::Result;
 use std::path::{Path, PathBuf};
 use std::fs;
@@ -28,22 +29,25 @@ pub fn should_include(path: &Path, formats: &[String], ignore_paths: &[PathBuf])
 pub fn generate_tree(
     dir: &Path,
     prefix: &str,
-    ignore_paths: &[PathBuf],
+    ignore_paths: &mut Vec<PathBuf>,
     formats: &[String],
     writer: &mut Writer,
 ) -> Result<()> {
+    if let Some(ignore) = get_ignore(dir) {
+        ignore_paths.extend(ignore);
+    }
     let entries: Vec<_> = fs::read_dir(dir)?
         .filter_map(|res| res.ok())
         .collect();
     let count = entries.len();
     let last_unignored = entries.iter().rev().position(|entry| {
         let path = entry.path();
-        should_include(&path, formats, ignore_paths)
+        should_include(&path, formats, &ignore_paths)
     }).map(|pos| count - pos).unwrap_or(count);
 
     for (i, entry) in entries.into_iter().enumerate() {
         let path = entry.path();
-        if should_ignore(&path, ignore_paths) {
+        if should_ignore(&path, &ignore_paths) {
             continue;
         }
         let connector = if i == last_unignored - 1 { "└── " } else { "├── " };
@@ -62,7 +66,7 @@ pub fn generate_tree(
             };
             generate_tree(&path, &new_prefix, ignore_paths, formats, writer)?;
         } else {
-            if should_include(&path, formats, ignore_paths) {
+            if should_include(&path, formats, &ignore_paths) {
                 writeln!(
                     writer,
                     "{}{}{}",

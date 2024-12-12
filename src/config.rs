@@ -1,15 +1,15 @@
 use anyhow::{Context, Result};
 use crate::cli::Cli;
 use std::fs;
-use std::path::PathBuf;
+use std::path::{PathBuf, Path};
 use serde::Deserialize;
-use std::io::Write;
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
     pub paths: Vec<PathBuf>,
     pub formats: Vec<String>,
     pub ignore_paths: Vec<PathBuf>,
+    pub ignore_files: Vec<Vec<PathBuf>>,
     pub output_file: PathBuf,
     // Add more configuration fields as needed
 }
@@ -20,6 +20,7 @@ impl Config {
             paths: cli.paths.clone(),
             formats: cli.formats.clone(),
             ignore_paths: cli.ignore_paths.clone(),
+            ignore_files: vec![],
             output_file: cli.output.clone(),
         };
 
@@ -36,7 +37,16 @@ impl Config {
         config.paths = crate::utils::canonicalize_paths(&config.paths)
             .with_context(|| "Canonicalizing paths")?;
 
+        println!("{:?}", config.paths);
+
+        config.ignore_paths = crate::utils::canonicalize_paths(&config.ignore_paths)
+            .with_context(|| "Canonicalizing ignore paths")?;
+
+        println!("{:?}", config.ignore_paths);
+
         config.formats = crate::utils::canonicalize_formats(&config.formats);
+
+        print!("{:?}", config.formats);
 
         Ok(config)
     }
@@ -77,4 +87,5 @@ impl Config {
         self.ignore_paths.extend(other.ignore_paths);
         // Merge other fields as necessary
     }
+
 }

@@ -6,6 +6,7 @@ use std::io::Write;
 
 use crate::config::Config;
 use crate::output::Writer;
+use crate::utils::get_ignore;
 use anyhow::Result;
 
 pub struct Collector {
@@ -42,12 +43,20 @@ impl Collector {
     fn write_project_structure(&self, writer: &mut Writer) -> Result<()> {
         writeln!(writer, "Project Structure:")?;
         for path in &self.config.paths {
-            if path.is_dir() && !path_handler::should_ignore(&path, &self.config.ignore_paths) {
+            // Ignore flag overrides the path flag
+            // Should it be this way (???????)
+
+            let mut ignore_paths = self.config.ignore_paths.clone();
+            if path.is_dir() {
+                ignore_paths.extend(get_ignore(path).unwrap_or(vec![]));
+            }
+
+            if path.is_dir() && !path_handler::should_ignore(&path, &ignore_paths) {
                 writeln!(writer, "{}/", path.file_name().unwrap().to_string_lossy())?;
                 path_handler::generate_tree(
                     &path,
                     "",
-                    &self.config.ignore_paths,
+                    &mut ignore_paths,
                     &self.config.formats,
                     writer,
                 )?;
