@@ -92,10 +92,11 @@ The collected data is then written to a single .txt file, making it easy to supp
 
 ### Command-Line Arguments
 
-- `-p, --paths <PATHS>`: Space-separated list of directories to scan.
 - `-f, --formats <FORMATS>`: Space-separated list of file formats/extensions to include (e.g., `rs,py,js`).
 - `-i, --ignore-paths <IGNORE_PATHS>`: Space-separated list of paths to exclude from scanning.
 - `-o, --output <OUTPUT_FILE>`: Path to the output file where collected data will be written.
+- '-h, --help': Display help information.
+- '-V, --version': Display version information.
 
 ### Example
 
