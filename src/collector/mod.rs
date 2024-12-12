@@ -24,14 +24,20 @@ impl Collector {
         // Write Project Structure
         self.write_project_structure(writer)?;
 
+        let mut ignore_paths = self.config.ignore_paths.clone();
+
         // Process each path
         for path in &self.config.paths {
             if path.is_file() {
-                if path_handler::should_include(path, &self.config.formats, &self.config.ignore_paths) {
+                if let Some(ignore) = get_ignore(path) {
+                    ignore_paths.extend(ignore);
+                }
+
+                if path_handler::should_include(path, &self.config.formats, &ignore_paths) {
                     file_processor::process_file(path, writer)?;
                 }
             } else if path.is_dir() {
-                if !path_handler::should_ignore(path, &self.config.ignore_paths) {
+                if !path_handler::should_ignore(path, &ignore_paths) {
                     directory_processor::process_directory(path, &self.config, writer)?;
                 }
             }
