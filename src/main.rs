@@ -15,7 +15,7 @@ fn main() -> Result<()> {
     let mut writer = Writer::new(&config.output_file)?;
 
     // Initialize the collector with necessary parameters
-    let collector = Collector::new(&config);
+    let mut collector = Collector::new(&config);
 
     // Perform the collection
     collector.collect(&mut writer)?;

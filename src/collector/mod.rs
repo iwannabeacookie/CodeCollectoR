@@ -6,7 +6,6 @@ use std::io::Write;
 
 use crate::config::Config;
 use crate::output::Writer;
-use crate::utils::get_ignore;
 use anyhow::Result;
 
 pub struct Collector {
@@ -20,24 +19,22 @@ impl Collector {
         }
     }
 
-    pub fn collect(&self, writer: &mut Writer) -> Result<()> {
+    pub fn collect(&mut self, writer: &mut Writer) -> Result<()> {
+        for path in &self.config.paths.clone() {
+            self.config.get_ignore(path);
+        }
+
         // Write Project Structure
         self.write_project_structure(writer)?;
-
-        let mut ignore_paths = self.config.ignore_paths.clone();
 
         // Process each path
         for path in &self.config.paths {
             if path.is_file() {
-                if let Some(ignore) = get_ignore(path) {
-                    ignore_paths.extend(ignore);
-                }
-
-                if path_handler::should_include(path, &self.config.formats, &ignore_paths) {
+                if path_handler::should_include(path, &self.config.formats, &self.config.ignore_paths) {
                     file_processor::process_file(path, writer)?;
                 }
             } else if path.is_dir() {
-                if !path_handler::should_ignore(path, &ignore_paths) {
+                if !path_handler::should_ignore(path, &self.config.ignore_paths) {
                     directory_processor::process_directory(path, &self.config, writer)?;
                 }
             }
@@ -52,17 +49,17 @@ impl Collector {
             // Ignore flag overrides the path flag
             // Should it be this way (???????)
 
-            let mut ignore_paths = self.config.ignore_paths.clone();
-            if path.is_dir() {
-                ignore_paths.extend(get_ignore(path).unwrap_or(vec![]));
-            }
+            // let mut ignore_paths = self.config.ignore_paths.clone();
+            // if path.is_dir() {
+            //     ignore_paths.extend(get_ignore(path).unwrap_or(vec![]));
+            // }
 
-            if path.is_dir() && !path_handler::should_ignore(&path, &ignore_paths) {
+            if path.is_dir() && !path_handler::should_ignore(&path, &self.config.ignore_paths) {
                 writeln!(writer, "{}/", path.file_name().unwrap().to_string_lossy())?;
                 path_handler::generate_tree(
                     &path,
                     "",
-                    &mut ignore_paths,
+                    &self.config.ignore_paths,
                     &self.config.formats,
                     writer,
                 )?;

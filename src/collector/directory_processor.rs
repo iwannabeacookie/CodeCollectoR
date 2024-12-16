@@ -1,7 +1,6 @@
 use crate::collector::path_handler::{should_ignore, should_include};
 use crate::config::Config;
 use crate::output::Writer;
-use crate::utils::get_ignore;
 use anyhow::Result;
 use ignore::WalkBuilder;
 use std::path::Path;
@@ -16,19 +15,13 @@ pub fn process_directory(dir: &Path, config: &Config, writer: &mut Writer) -> Re
 
     walker.run(|| {
         let mut writer = writer.clone();
-        let mut ignore_paths = config.ignore_paths.clone();
         Box::new(move |result| {
             match result {
                 Ok(entry) => {
                     let path = entry.path();
-                    if path.is_dir() {
-                        if let Some(ignore) = get_ignore(&path) {
-                            ignore_paths.extend(ignore);
-                        }
-                    }
-                    if path.is_dir() && should_ignore(path, &ignore_paths) {
+                    if path.is_dir() && should_ignore(path, &config.ignore_paths) {
                         return ignore::WalkState::Skip;
-                    } else if path.is_file() && should_include(path, &config.formats, &ignore_paths) {
+                    } else if path.is_file() && should_include(path, &config.formats, &config.ignore_paths) {
                         if let Err(e) = process_file(path, &mut writer) {
                             eprintln!("Error processing file {}: {:?}", path.display(), e);
                         }

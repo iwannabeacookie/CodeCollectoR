@@ -1,12 +1,11 @@
 use std::io::Write;
 use crate::output::Writer;
-use crate::utils::get_ignore;
 use anyhow::Result;
 use std::path::{Path, PathBuf};
 use std::fs;
 
 pub fn should_ignore(path: &Path, ignore_paths: &[PathBuf]) -> bool {
-    ignore_paths.iter().any(|ignore| path.ends_with(ignore.as_path()))
+    ignore_paths.iter().any(|ignore| path.eq(ignore.as_path()))
         || path
             .file_name()
             .map_or(false, |name| name.to_string_lossy().starts_with('.'))
@@ -29,13 +28,10 @@ pub fn should_include(path: &Path, formats: &[String], ignore_paths: &[PathBuf])
 pub fn generate_tree(
     dir: &Path,
     prefix: &str,
-    ignore_paths: &mut Vec<PathBuf>,
+    ignore_paths: &Vec<PathBuf>,
     formats: &[String],
     writer: &mut Writer,
 ) -> Result<()> {
-    if let Some(ignore) = get_ignore(dir) {
-        ignore_paths.extend(ignore);
-    }
     let entries: Vec<_> = fs::read_dir(dir)?
         .filter_map(|res| res.ok())
         .collect();
