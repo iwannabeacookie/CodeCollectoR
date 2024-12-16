@@ -21,7 +21,7 @@
 - [ ] Additional output formats (e.g., JSON, XML)
 - [ ] System-wide configuration
 - [ ] Directory specific configuration
-- [ ] Ignore file
+- [x] Ignore file
 - [ ] Output size optimization (e.g., collapsing functions, code blocks, etc.)
 - [ ] !!! Continuous code collection (watch mode) !!!
 - [ ] Interactive CLI mode
