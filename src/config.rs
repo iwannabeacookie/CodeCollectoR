@@ -37,6 +37,11 @@ impl Config {
             config.merge(preset_config);
         }
 
+        config.output_file = config.output_file.canonicalize()
+            .with_context(|| "Canonicalizing output file path")?;
+
+        config.ignore_paths.push(config.output_file.clone());
+
         config.paths = crate::utils::canonicalize_paths(&config.paths)
             .with_context(|| "Canonicalizing paths")?;
 
